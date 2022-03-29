@@ -1,6 +1,6 @@
-require linux-yocto-nxp-s32g2xx.inc
+require linux-yocto-nxp-s32g.inc
 
-KBRANCH_nxp-s32g2xx  = "v5.10/standard/nxp-sdk-5.10/nxp-s32g2xx"
+KBRANCH_nxp-s32g  = "v5.10/standard/nxp-sdk-5.10/nxp-s32g2xx"
 
-LINUX_VERSION_nxp-s32g2xx ?= "5.10.x"
+LINUX_VERSION_nxp-s32g ?= "5.10.x"
 
