@@ -82,6 +82,7 @@ The following BSP features are validated and supported.
 	+ UART: NXP LINFLEX UART
 	+ eDMA: Enhanced Direct Memory Access
 	+ GPIO: On-Chip general purpose Input/Output
+	+ HSE: Hardware Security Engine (Only S32G274A-EVB)
 	+ Watchdog
 	+ RTC
 	+ LLCE CAN: NXP Low Latency Communication Engine CAN
@@ -93,7 +94,6 @@ The following features are not supported or validated same as SDK.
 
 	x USB OTG
 	x CPU Freq
-	x HSE: Hardware Security Engine
 
 4. BSP Notes
 ============

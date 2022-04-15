@@ -11,14 +11,18 @@ do_make_nxp_s32g_wic() {
                         for plat in ${S32G_PLAT}; do
                                 j=$(expr $j + 1);
                                 type=`echo ${UBOOT_CONFIG} | awk -v "n=$j" '{print $n}'`
-                                cp ${IMAGE_LINK_NAME}.wic ${IMAGE_LINK_NAME}-${plat}.wic
                                 if [ -e atf-${type}.s32 ]; then
-                                        dd if=atf-${type}.s32 of=${IMAGE_LINK_NAME}-${plat}.wic conv=notrunc bs=256 count=1 seek=0
-                                        dd if=atf-${type}.s32 of=${IMAGE_LINK_NAME}-${plat}.wic conv=notrunc bs=512 seek=1 skip=1
-                                else
-                                        dd if=${UBOOT_BINARY}-${type} of=${IMAGE_LINK_NAME}-${plat}.wic conv=notrunc bs=256 count=1 seek=0
-                                        dd if=${UBOOT_BINARY}-${type} of=${IMAGE_LINK_NAME}-${plat}.wic conv=notrunc bs=512 seek=1 skip=1
+
+                                       cp ${IMAGE_LINK_NAME}.wic ${IMAGE_LINK_NAME}-${plat}.wic
+                                       if [ "${type}" = "s32g2xxaevb" ] && [ "${HSE_SEC_ENABLED}" = "1" ]; then
+                                               dd if=atf-${type}.s32 of=${IMAGE_LINK_NAME}-${plat}.wic bs=512 seek=1 skip=1 conv=notrunc,fsync
+                                               dd if=atf-${type}.s32.signature of=${IMAGE_LINK_NAME}-${plat}.wic  bs=512 seek=9 conv=notrunc,fsync
+                                       else
+                                               dd if=atf-${type}.s32 of=${IMAGE_LINK_NAME}-${plat}.wic conv=notrunc bs=256 count=1 seek=0
+	                                        dd if=atf-${type}.s32 of=${IMAGE_LINK_NAME}-${plat}.wic conv=notrunc bs=512 seek=1 skip=1
+                                       fi
                                 fi
+
                         done
                         unset j
 

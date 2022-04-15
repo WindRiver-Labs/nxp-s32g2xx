@@ -24,6 +24,7 @@ SRC_URI += " \
     file://0001-scripts-mailmapper-python2-python3.patch \
     file://0001-Makefile-add-.cfgout-file-dependency-to-fix-atf-buil.patch \
     file://0001-tools-s32gen1_secboot-replace-u-boot.s32-with-u-boot.patch \
+    ${@bb.utils.contains('HSE_SEC_ENABLED', '1', 'file://0001-configs-s32g2xxaevb-add-HSE_SECBOOT-config.patch', '', d)} \
 "
 
 SRCREV = "7cc85e188554fb38b6bd39a98b6149b033ebd53e"
@@ -48,10 +49,15 @@ do_install_append() {
         for type in ${UBOOT_CONFIG}; do
             j=$(expr $j + 1)
             if  [ $j -eq $i ]; then
+		if [ "${type}" = "s32g2xxaevb" ] && [ "${HSE_SEC_ENABLED}" = "1" ]; then
+                        sed -i 's|${HSE_FW_DEFAULT_NAME}|${HSE_LOCAL_FIRMWARE_DIR}/${HSE_FW_NAME_S32G2}|g' ${B}/${config}/${UBOOT_CFGOUT}
+		fi
+
                 install -d ${DEPLOY_DIR_IMAGE}/${type}/tools
                 cp ${B}/${config}/${UBOOT_BINARY} ${DEPLOY_DIR_IMAGE}/${type}/${UBOOT_BINARY}
                 cp ${B}/${config}/tools/mkimage ${DEPLOY_DIR_IMAGE}/${type}/tools/mkimage
                 cp ${B}/${config}/${UBOOT_CFGOUT} ${DEPLOY_DIR_IMAGE}/${type}/tools/${UBOOT_CFGOUT}
+
             fi
         done
         unset j
@@ -60,44 +66,5 @@ do_install_append() {
 
 }
 
-# Modify the layout of u-boot to adding hse support using the following script.
-# Currentlly, the board version of EVB is rev 1.0 and RDB2 is rev 2.0, they need
-# different hse firmware version to coorperate with the board version, and these
-# two boards will use same board version in future.
-
-HSE_LOCAL_FIRMWARE_EVB_BIN ?= ""
-HSE_LOCAL_FIRMWARE_RDB2_BIN ?= ""
-
-do_compile_append() {
-
-	unset i j
-	for config in ${UBOOT_MACHINE}; do
-		cp ${B}/tools/s32gen1_secboot.sh ${B}/${config}/tools/s32gen1_secboot.sh
-		chmod +x ${B}/${config}/tools/s32gen1_secboot.sh
-
-		i=$(expr $i + 1);
-		for type in ${UBOOT_CONFIG}; do
-			j=$(expr $j + 1)
-			if  [ $j -eq $i ]; then
-
-				if [ "${config}" = "${S32G274AEVB_UBOOT_DEFCONFIG_NAME}" ]; then
-					if [ -n "${HSE_LOCAL_FIRMWARE_EVB_BIN}" ] && [ -e "${HSE_LOCAL_FIRMWARE_EVB_BIN}" ]; then
-						${B}/${config}/tools/s32gen1_secboot.sh -k ./keys_hse -d ${B}/${config}/u-boot-hse-${type}.s32 --hse ${HSE_LOCAL_FIRMWARE_EVB_BIN}
-						cp ${B}/${config}/u-boot-hse-${type}.s32 ${B}/${config}/${UBOOT_BINARY}
-						cp ${B}/${config}/u-boot-hse-${type}.s32 ${B}/${config}/u-boot-${type}.bin
-					fi
-				else
-					if [ -n "${HSE_LOCAL_FIRMWARE_RDB2_BIN}" ] && [ -e "${HSE_LOCAL_FIRMWARE_RDB2_BIN}" ]; then
-						${B}/${config}/tools/s32gen1_secboot.sh -k ./keys_hse -d ${B}/${config}/u-boot-hse-${type}.s32 --hse ${HSE_LOCAL_FIRMWARE_RDB2_BIN}
-						cp ${B}/${config}/u-boot-hse-${type}.s32 ${B}/${config}/${UBOOT_BINARY}
-						cp ${B}/${config}/u-boot-hse-${type}.s32 ${B}/${config}/u-boot-${type}.bin
-					fi
-				fi
-			fi
-		done
-		unset j
-	done
-	unset i
-}
 
 COMPATIBLE_MACHINE_nxp-s32g = "nxp-s32g"

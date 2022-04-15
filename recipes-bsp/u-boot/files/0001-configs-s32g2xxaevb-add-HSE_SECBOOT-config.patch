@@ -1,0 +1,24 @@
+From 614b2edf3e4e078fb3e7dcedcd7cee20b52b31fa Mon Sep 17 00:00:00 2001
+From: Zhantao <zhantao.tang@windriver.com>
+Date: Wed, 23 Mar 2022 11:37:06 +0800
+Subject: [PATCH] configs: s32g2xxaevb: add HSE_SECBOOT config
+
+---
+ configs/s32g2xxaevb_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/configs/s32g2xxaevb_defconfig b/configs/s32g2xxaevb_defconfig
+index b8a5490296..8974a9b701 100644
+--- a/configs/s32g2xxaevb_defconfig
++++ b/configs/s32g2xxaevb_defconfig
+@@ -6,6 +6,7 @@ CONFIG_NR_DRAM_BANKS=2
+ CONFIG_TARGET_S32G2XXAEVB=y
+ CONFIG_FIT=y
+ CONFIG_SD_BOOT=y
++CONFIG_HSE_SECBOOT=y
+ CONFIG_USE_BOOTARGS=y
+ CONFIG_BOOTARGS="root=/dev/ram rw earlycon"
+ CONFIG_CMD_CPU=y
+-- 
+2.17.1
+

@@ -49,7 +49,12 @@ do_compile() {
 
 	for plat in ${PLATFORM}; do
 		ATF_BINARIES="${B}/${plat}/${BUILD_TYPE}"
-		oe_runmake -C ${S} PLAT=${plat} BL33="${DEPLOY_DIR_IMAGE}/${plat}/${UBOOT_BINARY}" MKIMAGE_CFG="${DEPLOY_DIR_IMAGE}/${plat}/tools/${UBOOT_CFGOUT}" all
+
+		if [ "${plat}" = "s32g2xxaevb" ] && [ "${HSE_SEC_ENABLED}" = "1" ]; then
+			oe_runmake -C ${S} PLAT=${plat} BL33="${DEPLOY_DIR_IMAGE}/${plat}/${UBOOT_BINARY}" MKIMAGE_CFG="${DEPLOY_DIR_IMAGE}/${plat}/tools/${UBOOT_CFGOUT}" FIP_MEMORY_OFFSET=0x3407e910 HSE_SECBOOT=1 all
+		else
+			oe_runmake -C ${S} PLAT=${plat} BL33="${DEPLOY_DIR_IMAGE}/${plat}/${UBOOT_BINARY}" MKIMAGE_CFG="${DEPLOY_DIR_IMAGE}/${plat}/tools/${UBOOT_CFGOUT}" all
+		fi
 	done
 }
 
@@ -65,6 +70,16 @@ do_deploy() {
 	install -d ${DEPLOY_DIR_IMAGE}
 	for plat in ${PLATFORM}; do
 		ATF_BINARIES="${B}/${plat}/${BUILD_TYPE}"
+
+		if [ "${plat}" = "s32g2xxaevb" ] && [ "${HSE_SEC_ENABLED}" = "1" ]; then
+			install -d ${ATF_BINARIES}/${HSE_SEC_KEYS}
+			openssl genrsa -out ${ATF_BINARIES}/${HSE_SEC_KEYS}/${HSE_SEC_PRI_KEY}
+			openssl rsa -in ${ATF_BINARIES}/${HSE_SEC_KEYS}/${HSE_SEC_PRI_KEY} -outform DER -pubout -out ${ATF_BINARIES}/${HSE_SEC_KEYS}/${HSE_SEC_PUB_KEY}
+			openssl dgst -sha1 -sign ${ATF_BINARIES}/${HSE_SEC_KEYS}/${HSE_SEC_PRI_KEY} -out ${ATF_BINARIES}/${HSE_SEC_SIGN_DST} ${ATF_BINARIES}/${HSE_SEC_SIGN_SRC}
+			cp -v ${ATF_BINARIES}/${HSE_SEC_KEYS}/${HSE_SEC_PUB_KEY} ${DEPLOY_DIR_IMAGE}/
+			cp -v ${ATF_BINARIES}/${HSE_SEC_SIGN_DST} ${DEPLOY_DIR_IMAGE}/atf-${plat}.s32.signature
+		fi
+
 		cp -v ${ATF_BINARIES}/fip.s32 ${DEPLOY_DIR_IMAGE}/atf-${plat}.s32
 	done
 }

@@ -303,9 +303,13 @@ The steps are as following:
     If users want to use HSE feature in linux, please specify the location
     of HSE firmware, like the following:
 
-	HSE_LOCAL_FIRMWARE_EVB_BIN = "/path/to/hse/firmware/of/evb/board"
+	HSE_LOCAL_FIRMWARE_DIR = "/path/to/hse/firmware/for/s32g2/boards"
+	HSE_FW_NAME_S32G2 = "name-of-hse-firmware-for-s32g2"
 
-    in the project <build-dir>/conf/local.conf.
+    in the project <build-dir>/conf/local.conf, the HSE_LOCAL_FIRMWARE_DIR
+    is the HSE firmwares location and HSE_FW_NAME_S32G2 is the real name
+    of HSE firmware for S32G2 boards.
+
     Then build the project as normal:
 
 	bitbake wrlinux-image-std
@@ -321,13 +325,12 @@ The steps are as following:
 
     If succeed, it should shows:
 
-	MMC read: dev # 0, block # 0, count 1 ...1 blocks read: OK
+	MMC read: dev # 0, block # 8, count 1 ...1 blocks read: OK
+	Enabling MUs...
 	Formatting NVM and RAM key stores...
 	Generating SYS_IMG...
-	Writing SYS_IMG to SDcard...
-	MMC write: dev # 0, block # 905, count 128...128 blocks written: OK
-	Updating SYS_IMG pointer...
-	MMC write: dev # 0, block # 0, count 1...1 blocks written: OK
+	Publishing SYS_IMG...
+	MMC write: dev # 0, block # 659, count 96...96 blocks written: OK
 	MMC write: dev # 0, block # 8, count 1...1 blocks written: OK
 
     then boot the board as normal.
@@ -366,14 +369,6 @@ NOTICE:
     and dts node in U-Boot. And this will be fixed in future. Moreover,
     there will be "hse-rng: no data available" message shown with HSE 0.8.5
     version firmware, and using 1.0.0 version HSE firmware can fix it.
-
-6.2.4 Known issues
-------------------
-
-For HSE feature, due to the board boot flow changed from uboot to ATF by
-default, and  HSE enablement flow changed accordingly, such that HSE is not
-available for now, and its support status will be updated when NXP SDK bsp32
-officially released.
 
 
 6.3 PFE
