@@ -20,6 +20,8 @@ This BSP supports the following boards:
                        CPU: NXP S32G274A rev. 1.0.0/1.0.1/2.1.0
    + NXP S32G274A-RDB2: Board: S32G274A-VNP-RDB2 (SCH-47440 REV C1, 700-47440 REV X2)
                        CPU: NXP S32G274A rev. 2.1.0
+   + NXP S32G399A-RDB3: Board: S32G399A-VNP-RDB3 (SCH-53060 REV E1, 700-53060 REV X2)
+                       CPU: NXP S32G399A rev. 1.0
 
 2. Change History
 =================
@@ -50,6 +52,8 @@ This BSP supports the following boards:
                            bsp31.0-5.10.41-rt.
   - 2022/03 (LINUXPG-1035): WindRiver Linux 10.21 RCPL11. Standard and rt support based on NXP SDK
                            pre-released SDK bsp32.0-5.10.90-rt.
+  - 2022/04 (LINUXPG-1035): WindRiver Linux 10.21 RCPL12. Standard and rt support based on NXP SDK
+                           officially released SDK bsp32.0-5.10.90-rt.
 
 3. BSP Features
 ===============
@@ -118,3 +122,10 @@ S32G274A-RDB2:
 	Board Serial:           NXP S32G27x
 	BootLoader:		U-Boot
 	BootLoader Version:	U-Boot 2020.04+g6286902c94 (Dec 20 2021 - 11:33:57 +0000)
+
+S32G399A-RDB3:
+        Processor::             NXP S32G399A
+        CPU Revision:           rev. 1.0
+        Board Serial:           NXP S32G39x
+        BootLoader:             U-Boot
+        BootLoader Version:     U-Boot 2020.04+g7cc85e1885 (Apr 12 2022 - 01:44:04 +0000)
