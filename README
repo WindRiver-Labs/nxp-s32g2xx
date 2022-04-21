@@ -536,19 +536,7 @@ NOTICE:
     on S32G274A RDB REV B2 or newer boards.
 
 
-6.5.1 Prerequirement
---------------------
-
-Currentlly, the ATF is an optional template feature, if users want to enable
-it, please adding the following line in <build-dir>/conf/local.conf of the
-project:
-
-	WRTEMPLATE = "feature/atf-s32g"
-
-This will enable the ATF feature and compile and install the related files
-into WIC image.
-
-6.5.2 STR verify steps
+6.5.1 STR verify steps
 ----------------------
 
 STR(Sleep To Ram) is a complex power management feature and is a high-level
